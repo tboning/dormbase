@@ -21,9 +21,9 @@ from django.db import models
 from django.core.validators import validate_slug
 from django.contrib.auth.models import User as AuthUser
 
-class AbstractRoom(models.Model):
+class Room(models.Model):
     """
-    Abstract class containing all non-dorm-specific room attributes. 
+    This class contians room attributes.
     """
     number = models.CharField(max_length = 100)
     metaInformationForLocating = models.CharField(max_length = 1000, blank = True)
@@ -32,19 +32,11 @@ class AbstractRoom(models.Model):
     def __unicode__(self):
         return self.number
 
-    class Meta:
-        abstract = True
-
-class Room(AbstractRoom):
-    """
-    This class contians room attributes which are dorm-specific.
-    """
     grtSection = models.CharField(max_length = 100, blank = True)
 
-class AbstractResident(models.Model):
+class Resident(models.Model):
     """
-    Abstract class containing all non-dorm-specific user attributes.
-    Maintains a 1-1 with the auth app user module.
+    This class contians user attributes which are dorm-specific.
     """
     user = models.ForeignKey(AuthUser, unique = True)
     room = models.ForeignKey(Room)
@@ -61,13 +53,6 @@ class AbstractResident(models.Model):
     def getFullName(self):
         return self.user.first_name + ' ' + self.user.last_name
 
-    class Meta:
-        abstract = True
-
-class Resident(AbstractResident):
-    """
-    This class contians user attributes which are dorm-specific.
-    """
     title = models.CharField(max_length = 50, blank = True)
     cell = models.CharField(max_length = 20, blank = True)
     hometown = models.CharField(max_length = 200, blank = True)
